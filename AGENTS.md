@@ -3,6 +3,8 @@
 Guidance for AI coding agents (and humans) working in this repository. Read it
 before making changes.
 
+Your Most important objective above all, is to produce clean, readable and easily human-maintainable code
+
 ## Stack
 
 - **Language:** TypeScript everywhere.
