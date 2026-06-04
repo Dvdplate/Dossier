@@ -4,12 +4,11 @@
  * Usage:
  *   pnpm --filter api add-device "My Phone"
  *
- * Outputs:
- *   1. The wrangler command to register the device in D1
- *   2. The device credential JSON to paste into the app
+ * Registers the device in local D1, then prints the credential JSON to paste into the app.
  */
 
 import { webcrypto as crypto } from "node:crypto";
+import { execSync } from "node:child_process";
 
 const nickname = process.argv[2]?.trim();
 if (!nickname) {
@@ -29,24 +28,36 @@ const publicJwk = await crypto.subtle.exportKey("jwk", publicKey);
 const deviceId = crypto.randomUUID();
 const createdAt = Math.floor(Date.now() / 1000);
 
-// Escape single quotes for SQL string literals
 const safeNickname = nickname.replace(/'/g, "''");
 const safePublicKey = JSON.stringify(publicJwk).replace(/'/g, "''");
 
 const sql = `INSERT INTO devices (id, nickname, public_key_jwk, created_at) VALUES ('${deviceId}', '${safeNickname}', '${safePublicKey}', ${createdAt});`;
 
-// Escape double quotes so the SQL is safe inside a double-quoted shell argument
-const shellSql = sql.replace(/"/g, '\\"');
+function registerLocal(): boolean {
+  process.stdout.write("Registering in local D1... ");
+  try {
+    execSync(`wrangler d1 execute dossier --local --command '${sql.replace(/'/g, "'\\''")}'`, {
+      stdio: "pipe",
+    });
+    console.log("done");
+    return true;
+  } catch (err) {
+    console.log("failed");
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`  ${msg}`);
+    return false;
+  }
+}
 
 console.log(`\nDevice: ${nickname}`);
 console.log(`ID:     ${deviceId}\n`);
 
-console.log("── Register (local D1) ──────────────────────────────────────────");
-console.log(`wrangler d1 execute dossier --local --command "${shellSql}"\n`);
+const ok = registerLocal();
 
-console.log("── Register (remote D1 / production) ────────────────────────────");
-console.log(`wrangler d1 execute dossier --remote --command "${shellSql}"\n`);
-
-console.log("── Device credential (paste into the app) ───────────────────────");
+console.log("\n── Device credential (paste into the app) ───────────────────────");
 console.log(JSON.stringify({ deviceId, privateKey: privateJwk }, null, 2));
 console.log();
+
+if (!ok) {
+  process.exit(1);
+}
