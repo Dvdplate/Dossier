@@ -104,13 +104,19 @@ next person who has to understand it.
 ## Minimalism
 
 Minimalism here is about structure and linkage, not terse syntax or premature
-optimization.
+optimization. It does **not** mean cutting features, degrading UX, or producing
+something inferior. A minimal solution is a complete solution — one that does
+everything it needs to do, with no unnecessary complexity layered on top.
 
 - Use the fewest concepts, layers, and indirections needed to express the
   solution.
 - Prefer deleting or merging over adding. Less code is less to read and break.
 - Avoid speculative abstraction. Build for what is needed now, not for an
   imagined future.
+- Never omit required functionality in the name of "keeping it simple". Simple
+  means easy to understand and change, not incomplete or watered-down.
+- The goal is code a newcomer can read and confidently modify — not code that
+  does less.
 
 ## Structure & How Code Links Together
 
