@@ -1,9 +1,9 @@
 import { useState, useEffect, FormEvent } from "react";
-import { setDeviceCredential, DeviceCredential } from "../../lib/auth.js";
+import { getDeviceCredential, setDeviceCredential, DeviceCredential } from "../../lib/auth.js";
 import { Button } from "../ui/Button.js";
 
 export function AuthGate({ children }: { children: React.ReactNode }) {
-  const [needsAuth, setNeedsAuth] = useState(false);
+  const [needsAuth, setNeedsAuth] = useState(() => !getDeviceCredential());
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
 
