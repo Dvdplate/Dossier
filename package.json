@@ -1,6 +1,7 @@
 {
   "name": "QUEST_MAKER_V3",
   "version": "1.0.0",
+  "packageManager": "pnpm@11.5.1",
   "description": "",
   "main": "index.js",
   "scripts": {
