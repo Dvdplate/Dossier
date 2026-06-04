@@ -1,13 +1,13 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "quest-maker-v3",
+  "name": "dossier",
   "main": "src/index.ts",
   "compatibility_date": "2025-05-26",
 
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "quest-maker-v3",
+      "database_name": "dossier",
       "database_id": "PLACEHOLDER",
       "migrations_dir": "drizzle"
     }

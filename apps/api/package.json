@@ -9,8 +9,8 @@
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "wrangler d1 migrations apply quest-maker-v3 --local",
-    "db:migrate:remote": "wrangler d1 migrations apply quest-maker-v3 --remote",
+    "db:migrate": "wrangler d1 migrations apply dossier --local",
+    "db:migrate:remote": "wrangler d1 migrations apply dossier --remote",
     "db:studio": "drizzle-kit studio",
     "add-device": "tsx scripts/add-device.ts"
   },

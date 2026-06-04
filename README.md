@@ -23,7 +23,7 @@ pnpm install
 ### 2. Create the D1 database
 
 ```bash
-npx wrangler d1 create quest-maker-v3
+npx wrangler d1 create dossier
 ```
 
 Copy the `database_id` from the output and paste it into `apps/api/wrangler.jsonc`:
@@ -32,7 +32,7 @@ Copy the `database_id` from the output and paste it into `apps/api/wrangler.json
 "d1_databases": [
   {
     "binding": "DB",
-    "database_name": "quest-maker-v3",
+    "database_name": "dossier",
     "database_id": "<paste your id here>",
     "migrations_dir": "drizzle"
   }

@@ -42,10 +42,10 @@ console.log(`\nDevice: ${nickname}`);
 console.log(`ID:     ${deviceId}\n`);
 
 console.log("── Register (local D1) ──────────────────────────────────────────");
-console.log(`wrangler d1 execute quest-maker-v3 --local --command "${shellSql}"\n`);
+console.log(`wrangler d1 execute dossier --local --command "${shellSql}"\n`);
 
 console.log("── Register (remote D1 / production) ────────────────────────────");
-console.log(`wrangler d1 execute quest-maker-v3 --remote --command "${shellSql}"\n`);
+console.log(`wrangler d1 execute dossier --remote --command "${shellSql}"\n`);
 
 console.log("── Device credential (paste into the app) ───────────────────────");
 console.log(JSON.stringify({ deviceId, privateKey: privateJwk }, null, 2));

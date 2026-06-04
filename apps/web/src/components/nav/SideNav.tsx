@@ -8,8 +8,8 @@ export function SideNav() {
   return (
     <nav className="hidden md:flex flex-col w-20 lg:w-56 shrink-0 bg-blackops border-r border-gunmetal min-h-screen sticky top-0">
       <div className="px-3 py-6 border-b border-gunmetal">
-        <span className="hidden lg:block font-mono text-amber tracking-widest uppercase text-xs">Quest Maker</span>
-        <span className="lg:hidden font-mono text-amber tracking-widest uppercase text-xs">QM</span>
+        <span className="hidden lg:block font-mono text-amber tracking-widest uppercase text-xs">Dossier</span>
+        <span className="lg:hidden font-mono text-amber tracking-widest uppercase text-xs">DS</span>
       </div>
       <div className="flex flex-col gap-1 p-2 pt-4 flex-1">
         {navItems.map((item) => {
