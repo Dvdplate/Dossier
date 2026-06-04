@@ -1,1 +1,5 @@
-AUTH_TOKEN=
+# Local Worker secrets — copy to .dev.vars and fill in values.
+# .dev.vars is gitignored and never committed.
+
+# Optional: freeze "now" for local testing (Unix ms timestamp)
+# NOW_OVERRIDE=
