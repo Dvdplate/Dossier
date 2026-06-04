@@ -1,0 +1,27 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "quest-maker-v3",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-05-26",
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "quest-maker-v3",
+      "database_id": "PLACEHOLDER",
+      "migrations_dir": "drizzle"
+    }
+  ],
+
+  "triggers": {
+    "crons": ["*/10 * * * *"]
+  },
+
+  // run_worker_first: the Worker handles /api/* routes; everything else
+  // falls through to the SPA assets with single-page-application 404 handling.
+  "assets": {
+    "directory": "../web/dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
+  }
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>DOSSIER</title>
+    
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0B0F14" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="DOSSIER" />
+    <link rel="apple-touch-icon" href="/icons/emblem.svg" />
+    
+    <style>
+      #splash {
+        position: fixed; inset: 0; background: #0B0F14; color: #D98F2B;
+        display: flex; align-items: center; justify-content: center;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+        z-index: 9999;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="splash">Establishing secure connection…</div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

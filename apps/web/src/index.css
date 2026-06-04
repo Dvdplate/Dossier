@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-blackops: 11 15 20;
+    --color-midnight: 18 24 31;
+    --color-steel: 46 74 92;
+    --color-gunmetal: 110 123 130;
+    --color-ash: 194 199 201;
+    --color-amber: 217 143 43;
+    --color-alert: 180 69 47;
+  }
+
+  body {
+    @apply bg-blackops text-ash antialiased;
+    /* Prevent pull-to-refresh and overscroll glow on mobile */
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background-color: rgb(var(--color-midnight));
+    color: rgb(var(--color-amber));
+  }
+}
+
+@layer utilities {
+  .hud-label {
+    @apply font-mono uppercase tracking-wider text-xs text-gunmetal;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}

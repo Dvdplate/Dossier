@@ -1,15 +1,9 @@
 {
-  "name": "QUEST_MAKER_V3",
+  "name": "quest-maker-v3",
   "version": "1.0.0",
+  "private": true,
+  "type": "module",
   "packageManager": "pnpm@11.5.1",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
@@ -17,5 +11,13 @@
       "onFail": "download"
     }
   },
-  "type": "module"
+  "scripts": {
+    "backend:dev": "pnpm --filter api dev",
+    "frontend:dev": "pnpm --filter web dev",
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "typecheck": "pnpm -r run typecheck",
+    "lint": "pnpm -r run lint",
+    "format": "pnpm -r run format"
+  }
 }
