@@ -13,7 +13,7 @@ export function FocusCarousel({ tasks }: FocusCarouselProps) {
   if (tasks.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-center p-8 text-ash">
-        <p className="font-mono text-sm tracking-widest uppercase mb-4">All objectives cleared, Agent.</p>
+        <p className="font-mono text-sm tracking-widest uppercase mb-4">All objectives cleared.</p>
         <p className="text-xs">Stand by for orders.</p>
       </div>
     );
