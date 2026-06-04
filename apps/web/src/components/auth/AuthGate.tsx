@@ -1,10 +1,11 @@
 import { useState, useEffect, FormEvent } from "react";
-import { setToken } from "../../lib/auth.js";
+import { setDeviceCredential, DeviceCredential } from "../../lib/auth.js";
 import { Button } from "../ui/Button.js";
 
 export function AuthGate({ children }: { children: React.ReactNode }) {
   const [needsAuth, setNeedsAuth] = useState(false);
-  const [tokenInput, setTokenInput] = useState("");
+  const [input, setInput] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const handler = () => setNeedsAuth(true);
@@ -16,11 +17,15 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (tokenInput.trim()) {
-      setToken(tokenInput.trim());
+    setError("");
+    try {
+      const cred = JSON.parse(input.trim()) as DeviceCredential;
+      if (!cred.deviceId || !cred.privateKey) throw new Error("missing fields");
+      setDeviceCredential(cred);
       setNeedsAuth(false);
-      // Reload page to retry failed queries
       window.location.reload();
+    } catch {
+      setError("Invalid credential. Paste the JSON output from: pnpm --filter api add-device");
     }
   };
 
@@ -35,18 +40,19 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
             </svg>
           </div>
           <h1 className="font-mono text-xl tracking-widest text-amber uppercase mb-2">Secure Connection</h1>
-          <p className="text-ash text-sm">Please provide your clearance code to continue.</p>
+          <p className="text-ash text-sm">Paste your device credential JSON to continue.</p>
         </div>
 
         <div className="flex flex-col gap-2">
-          <input
-            type="password"
-            value={tokenInput}
-            onChange={(e) => setTokenInput(e.target.value)}
-            className="w-full bg-midnight border border-gunmetal p-3 rounded font-mono text-center text-amber focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
-            placeholder="ACCESS CODE"
+          <textarea
+            value={input}
+            onChange={(e) => { setInput(e.target.value); setError(""); }}
+            rows={6}
+            className="w-full bg-midnight border border-gunmetal p-3 rounded font-mono text-xs text-amber focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none"
+            placeholder={'{"deviceId":"...","privateKey":{...}}'}
             autoFocus
           />
+          {error && <p className="text-red-400 text-xs font-mono">{error}</p>}
         </div>
 
         <Button type="submit" className="w-full">Authenticate</Button>

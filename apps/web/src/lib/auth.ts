@@ -1,13 +1,24 @@
-const TOKEN_KEY = "dossier-auth-token";
+const DEVICE_CREDENTIAL_KEY = "dossier-device-credential";
 
-export function getToken(): string | null {
-  return localStorage.getItem(TOKEN_KEY);
+export interface DeviceCredential {
+  deviceId: string;
+  privateKey: JsonWebKey;
 }
 
-export function setToken(token: string) {
-  localStorage.setItem(TOKEN_KEY, token);
+export function getDeviceCredential(): DeviceCredential | null {
+  const raw = localStorage.getItem(DEVICE_CREDENTIAL_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as DeviceCredential;
+  } catch {
+    return null;
+  }
 }
 
-export function clearToken() {
-  localStorage.removeItem(TOKEN_KEY);
+export function setDeviceCredential(cred: DeviceCredential) {
+  localStorage.setItem(DEVICE_CREDENTIAL_KEY, JSON.stringify(cred));
+}
+
+export function clearDeviceCredential() {
+  localStorage.removeItem(DEVICE_CREDENTIAL_KEY);
 }

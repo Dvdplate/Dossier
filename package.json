@@ -13,9 +13,16 @@
   },
   "scripts": {
     "backend:dev": "pnpm --filter api dev",
+    "backend:build": "pnpm --filter api build",
+    "backend:typecheck": "pnpm --filter api typecheck",
+    "backend:lint": "pnpm --filter api lint",
+    "backend:deploy": "pnpm --filter api deploy",
+    "backend:add-device": "pnpm --filter api add-device",
     "frontend:dev": "pnpm --filter web dev",
+    "frontend:build": "pnpm --filter web build",
+    "frontend:typecheck": "pnpm --filter web typecheck",
+    "frontend:lint": "pnpm --filter web lint",
     "build": "pnpm -r run build",
-    "test": "pnpm -r run test",
     "typecheck": "pnpm -r run typecheck",
     "lint": "pnpm -r run lint",
     "format": "pnpm -r run format"

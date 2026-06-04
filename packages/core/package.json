@@ -8,7 +8,6 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -17,7 +16,6 @@
   },
   "devDependencies": {
     "@types/luxon": "^3.6.2",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.3"
+    "typescript": "^5.8.3"
   }
 }
