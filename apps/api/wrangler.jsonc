@@ -19,9 +19,12 @@
 
   // run_worker_first: the Worker handles /api/* routes; everything else
   // falls through to the SPA assets with single-page-application 404 handling.
+  // Fallback if your wrangler rejects the array form: set run_worker_first: true
+  // and add app.all('*', c => c.env.ASSETS.fetch(c.req.raw)) after the API routes.
   "assets": {
     "directory": "../web/dist",
     "binding": "ASSETS",
-    "not_found_handling": "single-page-application"
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
   }
 }
