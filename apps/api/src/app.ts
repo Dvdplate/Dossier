@@ -6,6 +6,7 @@ import tasksRoutes from "./routes/tasks.js";
 import historyRoutes from "./routes/history.js";
 import remindersRoutes from "./routes/reminders.js";
 import birthdaysRoutes from "./routes/birthdays.js";
+import devicesRoutes from "./routes/devices.js";
 import type { Bindings } from "./env.js";
 
 // Export the AppError class so routes can use it
@@ -13,7 +14,7 @@ export class AppError extends Error {
   constructor(
     public code: string,
     message: string,
-    public status: 400 | 401 | 403 | 404 | 500 = 400,
+    public status: 400 | 401 | 403 | 404 | 409 | 500 = 400,
   ) {
     super(message);
     this.name = "AppError";
@@ -23,6 +24,7 @@ export class AppError extends Error {
 export type Variables = {
   db: Db;
   now: number;
+  deviceId?: string;
 };
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
@@ -50,6 +52,7 @@ api.route("/tasks", tasksRoutes);
 api.route("/history", historyRoutes);
 api.route("/reminders", remindersRoutes);
 api.route("/birthdays", birthdaysRoutes);
+api.route("/devices", devicesRoutes);
 
 // Mount under /api
 app.route("/api", api);

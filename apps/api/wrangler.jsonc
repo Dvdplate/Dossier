@@ -4,6 +4,8 @@
   "main": "src/index.ts",
   "compatibility_date": "2025-05-26",
 
+  // database_name is the Cloudflare D1 resource name (used by db:migrate / db:migrate:remote).
+  // "name" above is the Worker name — do not pass that to wrangler d1 commands.
   "d1_databases": [
     {
       "binding": "DB",

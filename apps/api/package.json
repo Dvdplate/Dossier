@@ -9,8 +9,9 @@
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "wrangler d1 migrations apply dossier --local",
+    "db:migrate": "wrangler d1 migrations apply dossier-main-db --local",
     "db:migrate:remote": "wrangler d1 migrations apply dossier-main-db --remote",
+    "db:clean": "bash scripts/clean-local-db.sh",
     "db:studio": "drizzle-kit studio",
     "add-device": "tsx scripts/add-device.ts"
   },
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250530.0",
+    "better-sqlite3": "^12.10.0",
     "drizzle-kit": "^0.31.0",
     "tsx": "^4.22.4",
     "typescript": "^5.8.3",

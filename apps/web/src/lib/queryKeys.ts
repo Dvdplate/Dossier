@@ -4,4 +4,5 @@ export const queryKeys = {
   reminders: ["reminders"],
   birthdays: ["birthdays"],
   birthdaysUpcoming: ["birthdays", "upcoming"],
+  devices: ["devices"],
 };

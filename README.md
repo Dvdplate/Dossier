@@ -23,7 +23,7 @@ pnpm install
 ### 2. Create the D1 database
 
 ```bash
-npx wrangler d1 create dossier
+npx wrangler d1 create dossier-main-db
 ```
 
 Copy the `database_id` from the output and paste it into `apps/api/wrangler.jsonc`:
@@ -32,7 +32,7 @@ Copy the `database_id` from the output and paste it into `apps/api/wrangler.json
 "d1_databases": [
   {
     "binding": "DB",
-    "database_name": "dossier",
+    "database_name": "dossier-main-db",
     "database_id": "<paste your id here>",
     "migrations_dir": "drizzle"
   }
@@ -53,9 +53,7 @@ Every request is authenticated by a device key pair — there are no passwords. 
 pnpm backend:add-device "My Phone"
 ```
 
-This prints:
-1. A `wrangler d1 execute` command — run it to register the device's public key in D1
-2. A JSON credential object — paste it into the app on first open
+This prints a JSON credential object. Register the device from an already-authenticated session in the **Devices** tab, then paste the credential JSON on the target device.
 
 ---
 
@@ -113,7 +111,6 @@ pnpm --filter api db:migrate:remote
 
 ```bash
 pnpm backend:add-device "My Phone"
-# then run the --remote wrangler command it prints
 ```
 
 ### 3. Build and deploy
@@ -139,7 +136,9 @@ X-Signature:  <base64 ECDSA signature over "METHOD\npath\ntimestamp">
 
 The Worker verifies the signature against the public key stored in D1. Requests with a missing, expired (>5 min), or invalid signature are rejected with 401.
 
-To add a new device or revoke one, use `pnpm backend:add-device` and manage the `devices` table directly via `pnpm --filter api db:studio`.
+To add a new device or revoke one, open the **Devices** tab while authenticated. Adding a device registers its public key and shows a credential JSON to copy to the new device. Paste that JSON on the target device to sign in — AuthGate only stores the credential locally.
+
+The CLI (`pnpm add-device M5-Mac`) is a convenience for generating key pairs offline; the public key must still be registered via the Devices tab (or `db:studio` for the first bootstrap device).
 
 ---
 
@@ -152,6 +151,8 @@ apps/
 packages/
   core/         Shared pure logic: timezone utils, recurrence, birthday helpers, types + zod schemas
   config/       Shared Tailwind preset (007 First Light palette) and tsconfig base
+docs/
+  db.md         D1 schema, migrations, local dev, Drizzle Studio, troubleshooting
 ```
 
 ## Database management
@@ -160,7 +161,8 @@ packages/
 pnpm --filter api db:generate        # drizzle-kit: schema → SQL migration
 pnpm --filter api db:migrate         # apply migrations to local D1
 pnpm --filter api db:migrate:remote  # apply migrations to remote D1
-pnpm --filter api db:studio          # Drizzle Studio (inspect / manage data)
+pnpm --filter api db:clean           # wipe local D1 and re-apply migrations
+pnpm explorer                        # Drizzle Studio (inspect / manage local D1)
 ```
 
-Migrations live in `apps/api/drizzle/` and are committed to version control. Never hand-edit an applied migration.
+Migrations live in `apps/api/drizzle/` and are committed to version control. Never hand-edit an applied migration. See [docs/db.md](docs/db.md) for the full database guide.

@@ -9,6 +9,7 @@ const Briefing = lazy(() => import("./routes/Briefing.js"));
 const Orders = lazy(() => import("./routes/Orders.js"));
 const BlackBook = lazy(() => import("./routes/BlackBook.js"));
 const Log = lazy(() => import("./routes/Log.js"));
+const Devices = lazy(() => import("./routes/Devices.js"));
 
 function LoadingFallback() {
   return (
@@ -34,6 +35,7 @@ export function App() {
                   <Route path="/orders" component={Orders} />
                   <Route path="/blackbook" component={BlackBook} />
                   <Route path="/log" component={Log} />
+                  <Route path="/devices" component={Devices} />
                   <Route>
                     <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center text-ash">
                       <h2 className="font-mono text-amber tracking-widest uppercase mb-4 text-xl">404 - Invalid Sector</h2>

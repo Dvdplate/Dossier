@@ -2,18 +2,18 @@
  * CLI tool to generate a new device key pair.
  *
  * Usage:
- *   pnpm --filter api add-device "My Phone"
+ *   pnpm --filter api add-device M5-Mac
  *
- * Generates the credential and prints it to the console. It does not touch the
- * database — register the device separately if needed.
+ * Generates the credential and prints it to the console.
  */
 
 import { webcrypto as crypto } from "node:crypto";
 
 const nickname = process.argv[2]?.trim();
 if (!nickname) {
-  console.error("Usage: add-device <nickname>");
-  process.exit(1);
+  console.log("\nProvide a device nickname, e.g.:\n");
+  console.log("  pnpm add-device M5-Mac\n");
+  process.exit(0);
 }
 
 const { privateKey, publicKey } = await crypto.subtle.generateKey(
@@ -34,5 +34,5 @@ console.log("── Public key (register this device) ────────�
 console.log(JSON.stringify(publicJwk, null, 2));
 
 console.log("\n── Device credential (paste into the app) ───────────────────────");
-console.log(JSON.stringify({ deviceId, privateKey: privateJwk }, null, 2));
+console.log(JSON.stringify({ deviceId, nickname, privateKey: privateJwk }, null, 2));
 console.log();

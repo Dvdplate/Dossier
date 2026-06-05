@@ -20,12 +20,15 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     setError("");
     try {
       const cred = JSON.parse(input.trim()) as DeviceCredential;
-      if (!cred.deviceId || !cred.privateKey) throw new Error("missing fields");
+      if (!cred.deviceId || !cred.privateKey || !cred.nickname?.trim()) {
+        throw new Error("missing fields");
+      }
+      cred.nickname = cred.nickname.trim();
       setDeviceCredential(cred);
       setNeedsAuth(false);
       window.location.reload();
     } catch {
-      setError("Invalid credential. Paste the JSON output from: pnpm --filter api add-device");
+      setError("Invalid credential. Paste the JSON from an already-registered device.");
     }
   };
 
@@ -49,7 +52,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
             onChange={(e) => { setInput(e.target.value); setError(""); }}
             rows={6}
             className="w-full bg-midnight border border-gunmetal p-3 rounded font-mono text-xs text-amber focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors resize-none"
-            placeholder={'{"deviceId":"...","privateKey":{...}}'}
+            placeholder={'{ Insert your device credential JSON here }'}
             autoFocus
           />
           {error && <p className="text-red-400 text-xs font-mono">{error}</p>}

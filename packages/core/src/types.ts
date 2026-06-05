@@ -73,6 +73,31 @@ export interface CustomMonth {
 }
 
 // ---------------------------------------------------------------------------
+// Devices (ECDSA P-256 auth)
+// ---------------------------------------------------------------------------
+
+export interface Device {
+  id: string;
+  nickname: string;
+  createdAt: number;
+}
+
+/** ECDSA P-256 private JWK exported by Web Crypto. */
+export type EcdsaPrivateJwk = {
+  kty: "EC";
+  crv: "P-256";
+  x: string;
+  y: string;
+  d: string;
+};
+
+export interface DeviceCredential {
+  deviceId: string;
+  nickname: string;
+  privateKey: EcdsaPrivateJwk;
+}
+
+// ---------------------------------------------------------------------------
 // Request DTOs + zod schemas — the API contract
 // ---------------------------------------------------------------------------
 
@@ -136,6 +161,17 @@ export const UpdateBirthdayInput = z.object({
   note: z.string().max(1000).nullable().optional(),
 });
 export type UpdateBirthdayInput = z.infer<typeof UpdateBirthdayInput>;
+
+const DeviceId = z.string().min(1).max(200);
+const DeviceNickname = z.string().trim().min(1).max(100);
+const PublicKeyJwk = z.object({}).passthrough();
+
+export const CreateDeviceInput = z.object({
+  deviceId: DeviceId,
+  nickname: DeviceNickname,
+  publicKeyJwk: PublicKeyJwk,
+});
+export type CreateDeviceInput = z.infer<typeof CreateDeviceInput>;
 
 // ---------------------------------------------------------------------------
 // Error shape

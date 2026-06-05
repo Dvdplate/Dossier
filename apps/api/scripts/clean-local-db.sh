@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
-# Sets up the local D1 database and applies all migrations.
+# Wipes local D1 state and reapplies migrations from scratch.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR/.."
 
+echo "Removing local D1 state..."
+rm -rf .wrangler/state/v3/d1
+
 echo "Applying migrations to local D1..."
 pnpm wrangler d1 migrations apply dossier-main-db --local
-echo "Done."
+
+echo "Done. Local D1 is reset."

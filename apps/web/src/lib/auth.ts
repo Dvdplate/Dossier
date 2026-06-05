@@ -2,6 +2,7 @@ const DEVICE_CREDENTIAL_KEY = "dossier-device-credential";
 
 export interface DeviceCredential {
   deviceId: string;
+  nickname: string;
   privateKey: JsonWebKey;
 }
 
