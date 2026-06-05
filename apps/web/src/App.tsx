@@ -4,6 +4,7 @@ import { BottomNav } from "./components/nav/BottomNav.js";
 import { SideNav } from "./components/nav/SideNav.js";
 import { AuthGate } from "./components/auth/AuthGate.js";
 import { InstallBanner } from "./components/pwa/InstallBanner.js";
+import { PwaDiagnostics } from "./components/pwa/PwaDiagnostics.js";
 import { ToastProvider } from "./components/ui/Toaster.js";
 
 const Briefing = lazy(() => import("./routes/Briefing.js"));
@@ -49,6 +50,7 @@ export function App() {
           </main>
           <BottomNav />
           <InstallBanner />
+          <PwaDiagnostics />
         </div>
       </AuthGate>
     </ToastProvider>
