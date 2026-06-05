@@ -1,16 +1,19 @@
-const CACHE_VERSION = 'dossier-v3';
+const CACHE_VERSION = 'dossier-v4';
 const SHELL_ASSETS = [
   '/',
   '/index.html',
-  '/offline.html',
+  '/offline',
   '/manifest.webmanifest',
   '/icons/emblem.svg'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_VERSION).then((cache) => cache.addAll(SHELL_ASSETS))
+    caches.open(CACHE_VERSION).then((cache) =>
+      Promise.allSettled(SHELL_ASSETS.map((url) => cache.add(url)))
+    )
   );
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -39,14 +42,14 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Assets and navigation: Cache-first, fallback to network, then offline.html
+  // Assets and navigation: Cache-first, fallback to network, then offline page
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) return cachedResponse;
 
       return fetch(event.request).catch(() => {
         if (event.request.mode === 'navigate') {
-          return caches.match('/index.html').then((html) => html || caches.match('/offline.html'));
+          return caches.match('/index.html').then((html) => html || caches.match('/offline'));
         }
         return new Response('', { status: 404 });
       });
