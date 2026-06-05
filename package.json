@@ -11,6 +11,7 @@
     "add-device": "pnpm --filter api add-device",
     "explorer": "pnpm --filter api db:studio",
     "db:clean": "pnpm --filter api db:clean",
+    "register-device:remote": "pnpm --filter api exec tsx ../../scripts/register-device-remote.ts",
     "format": "pnpm -r run format"
   }
 }
