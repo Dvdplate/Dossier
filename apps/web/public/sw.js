@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'dossier-v2';
+const CACHE_VERSION = 'dossier-v3';
 const SHELL_ASSETS = [
   '/',
   '/index.html',
