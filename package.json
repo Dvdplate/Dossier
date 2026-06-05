@@ -12,16 +12,11 @@
     }
   },
   "scripts": {
-    "backend:dev": "pnpm --filter api dev",
-    "backend:build": "pnpm --filter api build",
-    "backend:typecheck": "pnpm --filter api typecheck",
-    "backend:deploy": "pnpm --filter api deploy",
-    "backend:add-device": "pnpm --filter api add-device",
-    "frontend:dev": "pnpm --filter web dev",
-    "frontend:build": "pnpm --filter web build",
-    "frontend:typecheck": "pnpm --filter web typecheck",
+    "start": "pnpm -r run dev",
     "build": "pnpm -r run build",
     "typecheck": "pnpm -r run typecheck",
+    "deploy": "pnpm --filter api deploy",
+    "add-device": "pnpm --filter api add-device",
     "format": "pnpm -r run format"
   }
 }

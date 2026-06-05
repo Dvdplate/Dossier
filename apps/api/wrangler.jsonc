@@ -7,8 +7,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "dossier",
-      "database_id": "PLACEHOLDER",
+      "database_name": "dossier-main-db",
+      "database_id": "369ae0e5-8cdb-4142-87f8-97a0776a80ce",
       "migrations_dir": "drizzle"
     }
   ],
