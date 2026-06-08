@@ -1,7 +1,7 @@
 import { useState, FormEvent } from "react";
 import { useCreateContact, useUpdateContact } from "../hooks/useContacts.js";
 import { Button } from "../components/ui/Button.js";
-import type { Birthday } from "@dossier/core";
+import { MONTH_NAMES, type Birthday } from "@dossier/core";
 
 interface Props {
   contact?: Birthday;
@@ -56,12 +56,15 @@ export default function ContactEdit({ contact, onClose }: Props) {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block hud-label mb-1">Month</label>
-          <input 
-            type="number" min="1" max="12"
+          <select
             className="w-full bg-blackops border border-gunmetal rounded p-3 text-ash focus:outline-none focus:border-amber"
             value={birthMonth}
             onChange={e => setBirthMonth(e.target.value)}
-          />
+          >
+            {MONTH_NAMES.map((name, i) => (
+              <option key={name} value={i + 1}>{name}</option>
+            ))}
+          </select>
         </div>
         <div>
           <label className="block hud-label mb-1">Day</label>
