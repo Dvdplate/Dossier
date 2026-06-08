@@ -1,5 +1,5 @@
 import { useQueue } from "../hooks/useQueue.js";
-import { FocusCarousel } from "../components/queue/FocusCarousel.js";
+import { FocusQueue } from "../components/queue/FocusQueue.js";
 import { QuickAdd } from "../components/queue/QuickAdd.js";
 import { ContactsThisWeek } from "../components/birthdays/ContactsThisWeek.js";
 
@@ -18,7 +18,7 @@ export default function Briefing() {
         </div>
       ) : (
         <div className="flex-1 flex flex-col">
-          <FocusCarousel tasks={queue || []} />
+          <FocusQueue tasks={queue || []} />
           <QuickAdd />
           <div className="mt-auto">
             <ContactsThisWeek />

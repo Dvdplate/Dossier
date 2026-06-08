@@ -5,9 +5,10 @@ import { CompletionStamp } from "./CompletionStamp.js";
 
 interface Props {
   task: Task;
+  isFocus?: boolean;
 }
 
-export function CurrentObjectiveFrame({ task }: Props) {
+export function CurrentObjectiveFrame({ task, isFocus = true }: Props) {
   const completeMutation = useCompleteTask();
   const [isCompleting, setIsCompleting] = useState(false);
 
@@ -33,8 +34,8 @@ export function CurrentObjectiveFrame({ task }: Props) {
       <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-amber" />
 
       <div className="hud-label text-amber mb-4 flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full bg-amber animate-pulse" />
-        Current Objective
+        {isFocus && <span className="w-2 h-2 rounded-full bg-amber animate-pulse" />}
+        {isFocus ? "Current Objective" : "Objective"}
       </div>
 
       <div className="flex-1">
