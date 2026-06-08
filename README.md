@@ -50,7 +50,7 @@ pnpm --filter api db:migrate
 Every request is authenticated by a device key pair — there are no passwords. Run this once per device (phone, desktop, browser profile):
 
 ```bash
-pnpm backend:add-device "My Phone"
+pnpm add-device "My Phone"
 ```
 
 This prints a JSON credential object. Register the device from an already-authenticated session in the **Devices** tab, then paste the credential JSON on the target device.
@@ -63,10 +63,10 @@ Run both servers in separate terminals:
 
 ```bash
 # Terminal 1 — Worker + local D1 (API on http://localhost:8787)
-pnpm backend:dev
+pnpm --filter api dev
 
 # Terminal 2 — Vite dev server with HMR (proxies /api → :8787)
-pnpm frontend:dev
+pnpm --filter web dev
 ```
 
 Open `http://localhost:5173`. On first load the app will prompt for your device credential JSON.
@@ -92,9 +92,8 @@ pnpm lint           # lint
 Or per-package:
 
 ```bash
-pnpm backend:build      pnpm frontend:build
-pnpm backend:typecheck  pnpm frontend:typecheck
-pnpm backend:lint       pnpm frontend:lint
+pnpm --filter api build       pnpm --filter web build
+pnpm --filter api typecheck   pnpm --filter web typecheck
 ```
 
 ---
@@ -110,14 +109,19 @@ pnpm --filter api db:migrate:remote
 ### 2. Register at least one device for production
 
 ```bash
-pnpm backend:add-device "My Phone"
+pnpm add-device "My Phone"
 ```
 
 ### 3. Build and deploy
 
 ```bash
-pnpm frontend:build   # builds apps/web/dist
-pnpm backend:deploy   # wrangler deploy (bundles Worker + uploads assets)
+pnpm deploy   # builds all workspaces, then wrangler deploy (Worker + apps/web/dist)
+```
+
+Or explicitly:
+
+```bash
+pnpm build && pnpm --filter api deploy
 ```
 
 The Worker serves both the API at `/api/*` and the SPA at everything else.

@@ -7,7 +7,7 @@
     "start": "pnpm -r run dev",
     "build": "pnpm -r run build",
     "typecheck": "pnpm -r run typecheck",
-    "deploy": "pnpm --filter api deploy",
+    "deploy": "pnpm build && pnpm --filter api deploy",
     "add-device": "pnpm --filter api add-device",
     "explorer": "pnpm --filter api db:studio",
     "db:clean": "pnpm --filter api db:clean",
