@@ -27,7 +27,7 @@ export function Sheet({ open, onOpenChange, children }: SheetProps) {
         className="absolute inset-0 bg-blackops/80 backdrop-blur-sm transition-opacity"
         onClick={() => onOpenChange(false)}
       />
-      <div className="relative z-50 w-full bg-blackops border-t border-gunmetal rounded-t-xl p-6 shadow-xl animate-in slide-in-from-bottom-full duration-300">
+      <div className="relative z-50 w-full max-h-[85vh] overflow-y-auto bg-blackops border-t border-gunmetal rounded-t-xl p-6 shadow-xl animate-in slide-in-from-bottom-full duration-300">
         {children}
       </div>
     </div>

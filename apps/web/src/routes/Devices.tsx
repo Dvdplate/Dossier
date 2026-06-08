@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "../components/ui/Button.js";
 import { Sheet } from "../components/ui/Sheet.js";
 import { useCreateDevice, useDeleteDevice, useDevices } from "../hooks/useDevices.js";
@@ -6,6 +6,27 @@ import { generateDeviceKeys, makeDeviceCredential } from "../lib/deviceKeys.js";
 
 function formatDate(ms: number) {
   return new Date(ms).toLocaleString();
+}
+
+async function copyText(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    } catch {
+      return false;
+    }
+  }
 }
 
 export default function Devices() {
@@ -16,7 +37,9 @@ export default function Devices() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [nickname, setNickname] = useState("");
   const [generatedCredential, setGeneratedCredential] = useState<string>("");
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   const [localError, setLocalError] = useState("");
+  const credentialRef = useRef<HTMLTextAreaElement>(null);
 
   const sorted = useMemo(() => {
     return (devices ?? []).slice().sort((a, b) => b.createdAt - a.createdAt);
@@ -41,7 +64,24 @@ export default function Devices() {
     });
 
     const cred = makeDeviceCredential({ deviceId, nickname: trimmed, privateJwk });
+    setCopyState("idle");
     setGeneratedCredential(JSON.stringify(cred, null, 2));
+  };
+
+  useEffect(() => {
+    if (!generatedCredential) return;
+    const el = credentialRef.current;
+    if (!el) return;
+    el.scrollIntoView({ block: "nearest" });
+    el.focus();
+    el.select();
+  }, [generatedCredential]);
+
+  const handleCopyCredential = async () => {
+    if (!generatedCredential) return;
+    const ok = await copyText(generatedCredential);
+    setCopyState(ok ? "copied" : "failed");
+    if (ok) window.setTimeout(() => setCopyState("idle"), 2000);
   };
 
   if (isLoading) return null;
@@ -50,7 +90,7 @@ export default function Devices() {
     <div className="px-4 pt-6 pb-24 min-h-[calc(100vh-4rem)]">
       <header className="flex items-center justify-between mb-6">
         <h1 className="font-mono text-xl tracking-widest text-ash uppercase">Devices</h1>
-        <Button variant="ghost" onClick={() => { setIsAddOpen(true); setNickname(""); setGeneratedCredential(""); setLocalError(""); }} className="px-2">
+        <Button variant="ghost" onClick={() => { setIsAddOpen(true); setNickname(""); setGeneratedCredential(""); setCopyState("idle"); setLocalError(""); }} className="px-2">
           + Add
         </Button>
       </header>
@@ -141,16 +181,25 @@ export default function Devices() {
 
           {generatedCredential && (
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-mono text-ash uppercase tracking-widest">Credential JSON</label>
+              <div className="flex items-center justify-between gap-2">
+                <label className="text-xs font-mono text-ash uppercase tracking-widest">Credential JSON</label>
+                <Button variant="secondary" onClick={() => void handleCopyCredential()} className="h-8 px-3 text-xs">
+                  {copyState === "copied" ? "Copied!" : copyState === "failed" ? "Copy failed" : "Copy JSON"}
+                </Button>
+              </div>
               <textarea
+                ref={credentialRef}
                 readOnly
                 rows={8}
-                className="w-full bg-midnight border border-gunmetal p-3 rounded font-mono text-xs text-amber focus:outline-none resize-none"
+                className="w-full select-text bg-midnight border border-gunmetal p-3 rounded font-mono text-xs text-amber focus:outline-none resize-none"
                 value={generatedCredential}
                 onFocus={(e) => e.currentTarget.select()}
+                onClick={(e) => e.currentTarget.select()}
               />
               <p className="text-ash text-xs">
-                Copy this JSON to the new device, then paste it on first open.
+                {copyState === "failed"
+                  ? "Clipboard blocked — tap the JSON above, then use your device’s copy gesture."
+                  : "Copy this JSON to the new device, then paste it on first open."}
               </p>
             </div>
           )}
