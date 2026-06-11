@@ -8,8 +8,8 @@ Your Most important objective above all, is to produce clean, readable and easil
 ## Stack
 
 - **Language:** TypeScript everywhere.
-- **Frontend:** Vite-bundled React, styled entirely with Tailwind CSS, shipped
-  as an installable PWA (web app manifest + service worker).
+- **Frontend:** Vite-bundled React, styled entirely with Tailwind CSS — a browser
+  SPA with an optional Capacitor Android shell.
 - **API:** Hono running on a Cloudflare Worker.
 - **Database:** Cloudflare D1 (SQLite), accessed through Drizzle ORM, with schema
   and migrations managed by drizzle-kit.
@@ -21,7 +21,7 @@ Briefly: what this product is and how the pieces fit.
 
 - A full-stack TypeScript application split into deployable **apps** and reusable
   **packages** inside a single monorepo.
-- `apps/web` is the PWA frontend; `apps/api` is a Hono Worker backed by D1.
+- `apps/web` is the React SPA (+ Capacitor Android); `apps/api` is a Hono Worker backed by D1.
 - The frontend calls the Worker's HTTP API; both build on shared code in
   `packages/*`.
 
@@ -32,7 +32,7 @@ Where things live. Know this before you navigate.
 ```text
 .
 ├── apps/
-│   ├── web/                  # Vite + React PWA (Tailwind, manifest, service worker)
+│   ├── web/                  # Vite + React SPA (Tailwind; Capacitor Android in android/)
 │   └── api/                  # Hono app on a Cloudflare Worker
 │       ├── src/
 │       │   └── db/schema.ts  # Drizzle schema (source of truth)
@@ -142,7 +142,7 @@ the links between packages matter most.
 
 ## Frontend Conventions
 
-For the Vite + React PWA.
+For the Vite + React SPA.
 
 - Keep components small and focused. Colocate state with the component that owns
   it; lift it only when it is genuinely shared.
@@ -156,17 +156,18 @@ For the Vite + React PWA.
   Never put a secret in one.
 - Mind the bundle: code-split routes and keep what ships to the client small.
 
-## PWA & Offline
+## Android (Capacitor)
 
-Keep it installable and the cache trustworthy.
+The native Android app is an online-only WebView shell — no service worker cache.
 
-- Treat the manifest and service worker as load-bearing. Don't break
-  installability or the offline shell when changing build or routing.
-- Be deliberate about caching. Version the service worker and caches so users get
-  fresh assets instead of being stuck on stale ones.
-- Never cache authenticated or user-specific API responses in the service worker.
-- Verify install and offline behavior after changes that touch assets, routing,
-  or the worker.
+- Production Android builds bake in `VITE_API_BASE_URL` from `.env.production`
+  (absolute Worker HTTPS URL). Browser dev keeps `/api` via the Vite proxy.
+- After frontend changes that ship to Android, run `pnpm --filter web build:android`
+  (`vite build` + `cap sync android`) before opening Android Studio.
+- CORS on `/api` allows `https://localhost` and `capacitor://localhost` for the
+  Capacitor WebView. Don't break same-origin `/api` for browser/Worker-hosted SPA.
+- Optional live-reload via `server.url` in `capacitor.config.ts` is for local dev
+  only — never commit it.
 
 ## Backend / API Conventions
 
@@ -218,7 +219,7 @@ A change isn't done until it's verified.
   to make it pass.
 - Unit-test logic with Vitest. Test Worker routes against a local D1 (e.g. the
   Workers Vitest pool) so bindings behave realistically.
-- Cover key flows — including install and offline — with end-to-end tests.
+- Cover key flows with end-to-end tests where practical.
 - Run the checks for the package you touched, then the full pipeline, before
   finishing.
 
@@ -270,6 +271,6 @@ Treat every input and secret with suspicion.
 - For schema changes: is there a generated migration, applied locally?
 - Are there tests for the new behavior, and does the full suite (build, types,
   tests) pass?
-- Is the PWA still installable, with no stale-cache or offline regressions?
+- For Android-impacting frontend changes: did `build:android` succeed and sync?
 - Is the diff free of secrets, client-exposed secrets, build output, and
   unrelated changes?

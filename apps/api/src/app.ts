@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import { makeDb, Db } from "./db/client.js";
 import { auth as authMiddleware } from "./middleware/auth.js";
 import queueRoutes from "./routes/queue.js";
@@ -43,8 +44,18 @@ app.use("*", async (c, next) => {
   await next();
 });
 
-// 3. Mount sub-app for /api with auth
+// 3. Mount sub-app for /api with CORS then auth
+const ALLOWED_ORIGINS = ["https://localhost", "capacitor://localhost"];
+
 const api = new Hono<{ Bindings: Bindings; Variables: Variables }>();
+api.use(
+  "*",
+  cors({
+    origin: ALLOWED_ORIGINS,
+    allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allowHeaders: ["Content-Type", "X-Device-Id", "X-Timestamp", "X-Signature"],
+  }),
+);
 api.use("*", authMiddleware);
 
 api.route("/queue", queueRoutes);

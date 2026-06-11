@@ -48,19 +48,3 @@ createRoot(document.getElementById("root")!).render(
     </QueryClientProvider>
   </StrictMode>
 );
-
-if ("serviceWorker" in navigator && import.meta.env.PROD) {
-  window.addEventListener("load", () => {
-    let reloadedForUpdate = false;
-
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
-      if (reloadedForUpdate) return;
-      reloadedForUpdate = true;
-      location.reload();
-    });
-
-    navigator.serviceWorker.register(`/sw.js?v=${__BUILD_ID__}`).catch((err) => {
-      console.warn("SW registration failed: ", err);
-    });
-  });
-}

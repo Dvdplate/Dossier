@@ -6,6 +6,7 @@
   "scripts": {
     "start": "pnpm -r run dev",
     "build": "pnpm -r run build",
+    "test": "pnpm -r --if-present run test",
     "typecheck": "pnpm -r run typecheck",
     "deploy": "pnpm build && pnpm --filter api deploy",
     "add-device": "pnpm --filter api add-device",

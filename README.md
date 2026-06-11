@@ -1,12 +1,12 @@
 # DOSSIER
 
-A calm, single-focus personal task tracker. One ordered queue where position is priority — the top task is always your current objective. Recurring reminders, a birthday tracker, and a mission log. Built as an installable PWA on Cloudflare Workers + D1.
+A calm, single-focus personal task tracker. One ordered queue where position is priority — the top task is always your current objective. Recurring reminders, a birthday tracker, and a mission log. Built as a React SPA on Cloudflare Workers + D1, with an optional Android app via Capacitor.
 
 ## Stack
 
 - **API:** Hono on a Cloudflare Worker
 - **Database:** Cloudflare D1 (SQLite) via Drizzle ORM
-- **Frontend:** Vite + React + Tailwind CSS, shipped as a PWA
+- **Frontend:** Vite + React + Tailwind CSS (browser SPA + optional Capacitor Android shell)
 - **Auth:** ECDSA P-256 device key signing — no passwords
 - **Timezone:** Africa/Johannesburg (SAST, UTC+2)
 
@@ -86,6 +86,7 @@ This runs the recurring-reminder materialization once — useful for verifying a
 ```bash
 pnpm build          # build all workspaces
 pnpm typecheck      # TypeScript check across all packages
+pnpm test           # run tests (API CORS + auth)
 pnpm lint           # lint
 ```
 
@@ -128,6 +129,31 @@ The Worker serves both the API at `/api/*` and the SPA at everything else.
 
 ---
 
+## Android (Capacitor)
+
+The Android app wraps the same React SPA in a Capacitor WebView. It talks to the deployed Worker over HTTPS with CORS — not the local dev server.
+
+1. Set `VITE_API_BASE_URL` in `apps/web/.env.production` to your deployed Worker URL (e.g. `https://dossier.<account-subdomain>.workers.dev/api`). This file is committed; it contains only a public URL.
+2. Build and sync the native project:
+
+```bash
+pnpm --filter web build:android
+```
+
+3. Open in Android Studio and run on an emulator or device:
+
+```bash
+pnpm --filter web android:open
+```
+
+4. Paste your device credential JSON when prompted — same flow as the browser app.
+
+**Notes:**
+- The default path is testing against the deployed HTTPS Worker. Pointing at a local Worker (`http://127.0.0.1:8787`) requires Android cleartext network configuration and is not the default setup.
+- For live-reload during native development, temporarily add a `server.url` entry to `capacitor.config.ts` pointing at your Vite dev server — do not commit that change.
+
+---
+
 ## How authentication works
 
 Each device has an ECDSA P-256 key pair. The private key lives only in the device's localStorage — it never leaves the browser. Every API request is signed with it:
@@ -151,7 +177,7 @@ The CLI (`pnpm add-device M5-Mac`) is a convenience for generating key pairs off
 ```
 apps/
   api/          Hono Worker — API routes, D1 schema, device auth, recurring-reminder materialization
-  web/          Vite + React PWA — focus queue, standing orders, black book, mission log
+  web/          Vite + React SPA (+ Capacitor Android) — focus queue, standing orders, black book, mission log
 packages/
   core/         Shared pure logic: timezone utils, recurrence, birthday helpers, types + zod schemas
   config/       Shared Tailwind preset (007 First Light palette) and tsconfig base
