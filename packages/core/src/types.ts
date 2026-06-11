@@ -104,6 +104,7 @@ export interface DeviceCredential {
 export const CreateTaskInput = z.object({
   title: z.string().min(1).max(500),
   notes: z.string().max(2000).nullable().optional(),
+  urgent: z.boolean().optional(),
 });
 export type CreateTaskInput = z.infer<typeof CreateTaskInput>;
 

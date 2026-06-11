@@ -65,11 +65,17 @@ export async function getExistingOccurrenceKeys(db: Db, ruleIds: number[]): Prom
 // ---------------------------------------------------------------------------
 
 export async function createTask(db: Db, input: CreateTaskInput, nowMs: number) {
-  const [maxRow] = await db
-    .select({ max: sql<number>`MAX(${tasks.position})` })
-    .from(tasks)
-    .where(eq(tasks.status, "active"));
-  const position = (maxRow?.max ?? 0) + 1024;
+  let position: number;
+  if (input.urgent) {
+    const min = await getMinPosition(db);
+    position = (min ?? 0) - 1;
+  } else {
+    const [maxRow] = await db
+      .select({ max: sql<number>`MAX(${tasks.position})` })
+      .from(tasks)
+      .where(eq(tasks.status, "active"));
+    position = (maxRow?.max ?? 0) + 1024;
+  }
 
   const [row] = await db
     .insert(tasks)
